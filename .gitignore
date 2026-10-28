@@ -8,4 +8,6 @@ coverage/
 .env
 !.env.example
 TSF_BD_Coaching_2026.apk
+*.apk.idsig
 .firebase/
+tmp/
