@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
-import { FeeRecord, UnitType } from '../types';
+import { FeeRecord, UnitType, APK_DOWNLOAD_URL } from '../types';
 import {
   X,
   IdCard,
@@ -461,7 +461,9 @@ export const AuxiliaryModals: React.FC = () => {
             </div>
 
             <a
-              href="/TSF_BD_Coaching_2026.apk"
+              href={APK_DOWNLOAD_URL}
+              target="_blank"
+              rel="noopener noreferrer"
               download="TSF_BD_Coaching_2026.apk"
               className="w-full py-3 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs sm:text-sm shadow-md shadow-emerald-600/30 active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer"
             >

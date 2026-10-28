@@ -1,3 +1,6 @@
+export const APK_DOWNLOAD_URL =
+  'https://github.com/Gian-Juti-Tripura/tsf-bd-coaching/releases/download/v1.0.0/TSF_BD_Coaching_2026.apk';
+
 export type UserRole = 'super_admin' | 'admin' | 'teacher' | 'mentor' | 'student';
 
 export type UnitType = 'Science' | 'Commerce' | 'Arts' | 'Nursing';

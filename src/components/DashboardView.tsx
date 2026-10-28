@@ -5,7 +5,8 @@ import {
   ClassRoutine,
   Exam,
   Notice,
-  UserRole
+  UserRole,
+  APK_DOWNLOAD_URL
 } from '../types';
 import { SUPER_ADMIN_ACCOUNT } from '../data/mockData';
 import {
@@ -134,7 +135,9 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           {/* Quick Actions (Direct Offline APK) */}
           <div className="flex flex-col gap-2.5 shrink-0">
             <a
-              href="/TSF_BD_Coaching_2026.apk"
+              href={APK_DOWNLOAD_URL}
+              target="_blank"
+              rel="noopener noreferrer"
               download="TSF_BD_Coaching_2026.apk"
               className="px-5 py-3 bg-amber-400 hover:bg-amber-300 text-slate-950 font-black rounded-2xl shadow-xl transition-all active:scale-95 flex items-center justify-center gap-2 text-xs sm:text-sm border border-amber-300 cursor-pointer"
             >

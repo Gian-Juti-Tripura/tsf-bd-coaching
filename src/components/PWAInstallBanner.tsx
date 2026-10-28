@@ -10,6 +10,7 @@ import {
   Sparkles,
   ArrowRight
 } from 'lucide-react';
+import { APK_DOWNLOAD_URL } from '../types';
 
 interface PWAInstallBannerProps {
   lang: 'bn' | 'en';
@@ -75,7 +76,9 @@ export const PWAInstallBanner: React.FC<PWAInstallBannerProps> = ({
 
         <div className="flex flex-wrap items-center gap-2 shrink-0 w-full sm:w-auto">
           <a
-            href="/TSF_BD_Coaching_2026.apk"
+            href={APK_DOWNLOAD_URL}
+            target="_blank"
+            rel="noopener noreferrer"
             download="TSF_BD_Coaching_2026.apk"
             className="flex-1 sm:flex-none px-4 py-2 bg-amber-400 hover:bg-amber-300 text-slate-950 text-xs font-black rounded-xl shadow-lg transition-all active:scale-95 flex items-center justify-center gap-1.5 border border-amber-300"
           >

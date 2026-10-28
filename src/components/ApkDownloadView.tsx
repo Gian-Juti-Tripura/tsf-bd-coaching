@@ -14,6 +14,7 @@ import {
   HelpCircle,
   ExternalLink
 } from 'lucide-react';
+import { APK_DOWNLOAD_URL } from '../types';
 
 interface ApkDownloadViewProps {
   lang: 'bn' | 'en';
@@ -24,19 +25,17 @@ export const ApkDownloadView: React.FC<ApkDownloadViewProps> = ({ lang }) => {
   const [downloadSuccess, setDownloadSuccess] = useState(false);
   const [copiedLink, setCopiedLink] = useState(false);
 
-  const handleDownload = async () => {
+  const handleDownload = () => {
     try {
       setIsDownloading(true);
-      const response = await fetch('/TSF_BD_Coaching_2026.apk');
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
-      a.href = url;
+      a.href = APK_DOWNLOAD_URL;
+      a.target = '_blank';
+      a.rel = 'noopener noreferrer';
       a.download = 'TSF_BD_Coaching_2026.apk';
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
-      window.URL.revokeObjectURL(url);
 
       setDownloadSuccess(true);
       try {
@@ -50,16 +49,14 @@ export const ApkDownloadView: React.FC<ApkDownloadViewProps> = ({ lang }) => {
       setTimeout(() => setDownloadSuccess(false), 6000);
     } catch (err) {
       console.error('Download error:', err);
-      // Fallback
-      window.location.href = '/TSF_BD_Coaching_2026.apk';
+      window.open(APK_DOWNLOAD_URL, '_blank');
     } finally {
       setIsDownloading(false);
     }
   };
 
   const handleCopyLink = () => {
-    const fullUrl = `${window.location.origin}/TSF_BD_Coaching_2026.apk`;
-    navigator.clipboard.writeText(fullUrl);
+    navigator.clipboard.writeText(APK_DOWNLOAD_URL);
     setCopiedLink(true);
     setTimeout(() => setCopiedLink(false), 2000);
   };
@@ -133,7 +130,9 @@ export const ApkDownloadView: React.FC<ApkDownloadViewProps> = ({ lang }) => {
           {/* Direct File Link & Copy */}
           <div className="flex items-center justify-center gap-3 pt-1 text-xs">
             <a
-              href="/TSF_BD_Coaching_2026.apk"
+              href={APK_DOWNLOAD_URL}
+              target="_blank"
+              rel="noopener noreferrer"
               download="TSF_BD_Coaching_2026.apk"
               className="text-sky-300 hover:text-white underline font-semibold flex items-center gap-1"
             >
