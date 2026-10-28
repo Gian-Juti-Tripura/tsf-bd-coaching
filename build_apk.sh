@@ -89,6 +89,11 @@ cat << 'JAVA' > "$BUILD_DIR/src/org/tsfbd/coaching/MainActivity.java"
 package org.tsfbd.coaching;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.Window;
@@ -100,6 +105,8 @@ import android.webkit.WebChromeClient;
 
 public class MainActivity extends Activity {
     private WebView webView;
+    private static final String LIVE_URL = "https://tsf-coaching-hub.web.app";
+    private static final String OFFLINE_URL = "file:///android_asset/index.html";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,13 +133,43 @@ public class MainActivity extends Activity {
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                view.loadUrl(url);
+                if (url.startsWith(LIVE_URL) || url.startsWith("file:///android_asset") || url.startsWith("https://tsf-coaching-hub.firebaseapp.com")) {
+                    view.loadUrl(url);
+                    return true;
+                }
+                try {
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                    startActivity(intent);
+                } catch (Exception e) {
+                    view.loadUrl(url);
+                }
                 return true;
+            }
+
+            @Override
+            public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+                if (failingUrl != null && failingUrl.startsWith(LIVE_URL)) {
+                    view.loadUrl(OFFLINE_URL);
+                }
             }
         });
 
-        // Load self-contained offline application directly from asset bundle
-        webView.loadUrl("file:///android_asset/index.html");
+        if (isNetworkAvailable()) {
+            webView.loadUrl(LIVE_URL);
+        } else {
+            webView.loadUrl(OFFLINE_URL);
+        }
+    }
+
+    private boolean isNetworkAvailable() {
+        try {
+            ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+            if (cm != null) {
+                NetworkInfo netInfo = cm.getActiveNetworkInfo();
+                return netInfo != null && netInfo.isConnected();
+            }
+        } catch (Exception ignored) {}
+        return false;
     }
 
     @Override
@@ -179,15 +216,11 @@ echo "11. Signing APK with Keystore..."
     --ks "$KEYSTORE" \
     --ks-pass pass:android \
     --key-pass pass:android \
-    --out "$PROJECT_ROOT/public/TSF_BD_Coaching_2026.apk" \
+    --out "$PROJECT_ROOT/TSF_BD_Coaching_2026.apk" \
     "$BUILD_DIR/bin/app-aligned.apk"
 
-cp "$PROJECT_ROOT/public/TSF_BD_Coaching_2026.apk" "$PROJECT_ROOT/dist/TSF_BD_Coaching_2026.apk"
-cp "$PROJECT_ROOT/public/TSF_BD_Coaching_2026.apk" "$PROJECT_ROOT/TSF_BD_Coaching_2026.apk"
-
 echo "12. Verifying APK Signature..."
-"$APKSIGNER" verify --verbose "$PROJECT_ROOT/public/TSF_BD_Coaching_2026.apk"
+"$APKSIGNER" verify --verbose "$PROJECT_ROOT/TSF_BD_Coaching_2026.apk"
 
 echo "=== FRESH CLEAN BUILD SUCCESSFUL ==="
-ls -lh "$PROJECT_ROOT/public/TSF_BD_Coaching_2026.apk"
 ls -lh "$PROJECT_ROOT/TSF_BD_Coaching_2026.apk"
